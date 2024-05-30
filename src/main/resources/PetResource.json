@@ -1,0 +1,18 @@
+{
+  "id": 99998,
+  "category": {
+    "id": 99998,
+    "name": "felino"
+  },
+  "name": "Shepherd",
+  "photoUrls": [
+    "http://fotosdegato.com.br/foto1.png"
+  ],
+  "tags": [
+    {
+      "id": 99998,
+      "name": "Sem raça definida"
+    }
+  ],
+  "status": "available"
+}
