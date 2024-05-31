@@ -175,4 +175,13 @@ public class TreinamentoRestAssured {
                 statusCode(200).body(hasItems());
     }
 
+    @Test
+    public void realizarRequisiçãoPetInformandoMétodoInválido(){
+        given().
+                baseUri(globals.baseUri).
+                basePath("/pet").
+                header(globals.getContent()).
+                when().patch();
+    }
+
 }
