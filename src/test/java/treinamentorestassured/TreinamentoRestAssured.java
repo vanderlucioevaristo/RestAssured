@@ -7,23 +7,26 @@ import jsonObjects.TagObject;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
+
+import utils.Globals;
 import utils.JsonUtil;
 import java.io.IOException;
 
 
 
 public class TreinamentoRestAssured {
+    Globals globals = new Globals();
 
     @Test
     public void adicionarNovoPetaLojaComSucesso(){
         int id = 67894569;;
-        int categoryId = 67894569;;
+        int categoryId = 67844569;;
         String categoryName = "cães";
         String name = "cachorro do vander";
         String [] photoUrls = new String [] {"https://petstore.swagger.io/v2/pet/"+id+"/pet1.png","https://petstore.swagger.io/v2/pet/"+id+"/pet2.png"};
-        int idTag1 = 67894569;;
+        int idTag1 = 67894570;
         String nameTag1 = "macho";
-        int idTag2 = 66894569;;
+        int idTag2 = 66896580;
         String nameTag2 = "caramelo";
         String status = "available";
 
@@ -54,7 +57,7 @@ public class TreinamentoRestAssured {
         petObject.setTags(new TagObject[]{tag1,tag2});
 
         given().
-                baseUri("https://petstore.swagger.io/v2/").
+                baseUri(globals.getBaseUri()).
                 basePath("pet").
                 header("content-type", "Application/Json").
                 body(petObject).
@@ -84,7 +87,7 @@ public class TreinamentoRestAssured {
         pedido.setComplete(true);
 
         given().
-                baseUri("https://petstore.swagger.io/v2/").
+                baseUri(globals.getBaseUri()).
                 basePath("store/order").
                 header("content-type", "Application/Json").
                 body(pedido).
@@ -104,7 +107,7 @@ public class TreinamentoRestAssured {
         String message = "Pet not found";
 
         given().
-                baseUri("https://petstore.swagger.io/v2").
+                baseUri(globals.getBaseUri()).
                 basePath("pet/{petId}").
                 pathParam("petId",id).
                 when().get().then().statusCode(404).
@@ -137,15 +140,39 @@ public class TreinamentoRestAssured {
 
         pet.setName(name);
         given().
-                baseUri("https://petstore.swagger.io/v2").
+                baseUri(globals.getBaseUri()).
                 basePath("/pet").
-                header("content-type", "Application/Json").
+                header(globals.getContent()).
                 body(pet).
                 when().put().
                 then().statusCode(200).
                 body("name", equalTo(name));
 
         pet.deletePet(id);
+    }
+
+    @Test
+    public void pesquisarPorUmPetInformandoIdComFormatoInválido(){
+        String id = "999999999999999999999";
+        given().
+                baseUri(globals.getBaseUri()).
+                basePath("/pet/"+id).
+                header(globals.getContent()).
+                when().get().
+                then().statusCode(404).
+                body("message", containsString("java.lang.NumberFormatException: For input string:"));
+    }
+
+    @Test
+    public void pesquisarPorPetsComStatusPending(){
+        String status = "pending";
+        given().
+                baseUri(globals.getBaseUri()).
+                basePath("/pet/findByStatus?status=" + status).
+                header(globals.getContent()).
+                when().get().
+                then().
+                statusCode(200).body(hasItems());
     }
 
 }
