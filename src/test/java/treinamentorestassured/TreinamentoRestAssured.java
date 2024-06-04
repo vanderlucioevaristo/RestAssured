@@ -177,11 +177,12 @@ public class TreinamentoRestAssured {
 
     @Test
     public void realizarRequisiçãoPetInformandoMétodoInválido(){
+        int id = 216132;
         given().
                 baseUri(globals.baseUri).
-                basePath("/pet").
+                basePath("/pet/"+id+"uploadImage").
                 header(globals.getContent()).
-                when().patch();
+                when().get();
     }
 
 }
